@@ -14,14 +14,9 @@ import process from 'process';
 export default function series(tasks, cb) {
     const results = [];
     let current = 0;
-    let isSync = true;
 
     function done(err) {
-        function end() {
-            if (cb) cb(err, results);
-        }
-        if (isSync) process.nextTick(end);
-        else end();
+        if (cb) cb(err, results);
     }
 
     function each(err, result) {
@@ -32,6 +27,4 @@ export default function series(tasks, cb) {
 
     if (tasks.length > 0) tasks[0](each);
     else done(null);
-
-    isSync = false;
 }
